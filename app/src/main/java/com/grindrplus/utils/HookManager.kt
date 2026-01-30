@@ -6,6 +6,7 @@ import com.grindrplus.hooks.AllowScreenshots
 import com.grindrplus.hooks.AntiBlock
 import com.grindrplus.hooks.AntiDetection
 import com.grindrplus.hooks.BanManagement
+import com.grindrplus.hooks.BehavioralSimulation
 import com.grindrplus.hooks.ChatIndicators
 import com.grindrplus.hooks.ChatTerminal
 import com.grindrplus.hooks.DisableAnalytics
@@ -22,6 +23,7 @@ import com.grindrplus.hooks.LocationSpoofer
 import com.grindrplus.hooks.NotificationAlerts
 import com.grindrplus.hooks.OnlineIndicator
 import com.grindrplus.hooks.ProfileDetails
+import com.grindrplus.hooks.ProfileAnalyticsTracker
 import com.grindrplus.hooks.ProfileViews
 import com.grindrplus.hooks.QuickBlock
 import com.grindrplus.hooks.StatusDialog
@@ -44,6 +46,7 @@ class HookManager {
                 AntiBlock(),
                 AntiDetection(),
                 BanManagement(),
+                BehavioralSimulation(),
                 ChatIndicators(),
                 ChatTerminal(),
                 DisableAnalytics(),
@@ -59,6 +62,7 @@ class HookManager {
                 LocationSpoofer(),
                 NotificationAlerts(),
                 OnlineIndicator(),
+                ProfileAnalyticsTracker(),
                 ProfileDetails(),
                 ProfileViews(),
                 QuickBlock(),
