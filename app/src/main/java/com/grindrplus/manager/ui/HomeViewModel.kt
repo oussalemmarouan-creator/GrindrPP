@@ -19,6 +19,7 @@ data class Release(
     val description: String,
     val author: String,
     val avatarUrl: String,
+    val url: String,
     val publishedAt: Instant,
 )
 
@@ -27,6 +28,7 @@ class HomeViewModel : ViewModel() {
     val releases = mutableStateMapOf<String, Release>()
     val isLoading = mutableStateOf(true)
     val errorMessage = mutableStateOf<String?>(null)
+    val lastUpdated = mutableStateOf<Instant?>(null)
 
     // Flag to avoid multiple fetches
     private var hasFetched = false
@@ -82,9 +84,10 @@ class HomeViewModel : ViewModel() {
                 release.getString("body") else "No description provided"
             val author = release.getJSONObject("author").getString("login")
             val avatarUrl = release.getJSONObject("author").getString("avatar_url")
+            val url = release.getString("html_url")
             val publishedAt = Instant.parse(release.getString("published_at"))
 
-            newReleases[id] = Release(name, description, author, avatarUrl, publishedAt)
+            newReleases[id] = Release(name, description, author, avatarUrl, url, publishedAt)
         }
         releases.clear()
         releases.putAll(newReleases)
@@ -107,6 +110,7 @@ class HomeViewModel : ViewModel() {
 
                 parseContributors(contributorsDeferred.await())
                 parseReleases(releasesDeferred.await())
+                lastUpdated.value = Instant.now()
             } catch (e: Exception) {
                 Logger.e("$TAG: Error fetching data: ${e.message}")
                 errorMessage.value = "An error occurred: ${e.message}"
