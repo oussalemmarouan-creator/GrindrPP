@@ -189,6 +189,20 @@ fun HomeScreen(innerPadding: PaddingValues, viewModel: HomeViewModel = viewModel
                             syntaxHighlightColor = Color.Transparent,
                             modifier = Modifier.fillMaxWidth()
                         )
+
+                        Button(
+                            onClick = {
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    release.url.toUri()
+                                ).also { intent ->
+                                    context.startActivity(intent)
+                                }
+                            },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text("Download")
+                        }
                     }
                 }
             }

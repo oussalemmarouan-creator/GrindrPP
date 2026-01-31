@@ -19,6 +19,7 @@ data class Release(
     val description: String,
     val author: String,
     val avatarUrl: String,
+    val url: String,
     val publishedAt: Instant,
 )
 
@@ -83,9 +84,10 @@ class HomeViewModel : ViewModel() {
                 release.getString("body") else "No description provided"
             val author = release.getJSONObject("author").getString("login")
             val avatarUrl = release.getJSONObject("author").getString("avatar_url")
+            val url = release.getString("html_url")
             val publishedAt = Instant.parse(release.getString("published_at"))
 
-            newReleases[id] = Release(name, description, author, avatarUrl, publishedAt)
+            newReleases[id] = Release(name, description, author, avatarUrl, url, publishedAt)
         }
         releases.clear()
         releases.putAll(newReleases)
