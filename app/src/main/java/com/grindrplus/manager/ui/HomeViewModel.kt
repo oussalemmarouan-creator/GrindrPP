@@ -27,6 +27,7 @@ class HomeViewModel : ViewModel() {
     val releases = mutableStateMapOf<String, Release>()
     val isLoading = mutableStateOf(true)
     val errorMessage = mutableStateOf<String?>(null)
+    val lastUpdated = mutableStateOf<Instant?>(null)
 
     // Flag to avoid multiple fetches
     private var hasFetched = false
@@ -107,6 +108,7 @@ class HomeViewModel : ViewModel() {
 
                 parseContributors(contributorsDeferred.await())
                 parseReleases(releasesDeferred.await())
+                lastUpdated.value = Instant.now()
             } catch (e: Exception) {
                 Logger.e("$TAG: Error fetching data: ${e.message}")
                 errorMessage.value = "An error occurred: ${e.message}"

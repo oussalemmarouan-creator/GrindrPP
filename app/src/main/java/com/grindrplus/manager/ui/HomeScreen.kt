@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,10 +32,18 @@ import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeScreen(innerPadding: PaddingValues, viewModel: HomeViewModel = viewModel()) {
     val context = LocalContext.current
+    val lastUpdated = viewModel.lastUpdated.value
+    val lastUpdatedText = lastUpdated?.let {
+        DateTimeFormatter.ofPattern("MMM d, yyyy • h:mm a")
+            .withZone(ZoneId.systemDefault())
+            .format(it)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.fetchData()
@@ -62,15 +71,44 @@ fun HomeScreen(innerPadding: PaddingValues, viewModel: HomeViewModel = viewModel
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { viewModel.fetchData(forceRefresh = true) },
+                    enabled = !viewModel.isLoading.value
+                ) {
+                    Text(text = if (viewModel.isLoading.value) "Refreshing..." else "Refresh")
+                }
+
+                if (lastUpdatedText != null) {
+                    Text(
+                        text = "Last updated $lastUpdatedText",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Gray
+                    )
+                }
+            }
         }
 
         viewModel.errorMessage.value?.let { message ->
-            Text(
-                text = message,
-                color = Red,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = message,
+                    color = Red,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Button(onClick = { viewModel.fetchData(forceRefresh = true) }) {
+                    Text("Try again")
+                }
+            }
         }
 
         Column(
